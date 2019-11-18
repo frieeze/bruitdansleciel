@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.TweetsFragment">
+    >
 
-    <TextView
-        android:id="@+id/recherche"
+
+
+    <EditText
+        android:id="@+id/searchFilter"
         android:layout_width="125dp"
         android:layout_height="50dp"
         android:layout_marginStart="116dp"
         android:layout_marginTop="52dp"
         android:gravity="center"
-        android:text="Recherche"
+        android:hint="Search"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

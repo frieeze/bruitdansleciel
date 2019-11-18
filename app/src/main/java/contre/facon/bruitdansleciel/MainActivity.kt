@@ -20,12 +20,15 @@ import androidx.core.app.ComponentActivity
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
+import android.text.Editable
+import android.text.TextWatcher
 
 
 class MainActivity : AppCompatActivity() {
 
     private var mediaPlayer: MediaPlayer? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,23 +44,31 @@ class MainActivity : AppCompatActivity() {
         getAllSongs(nameSong)   //ON recupère tous les sons dans le repertoire sdcard/music/
 
 
+        println("-----------------------------------------" + pathToSong.toString())
 
-
-
+        val searchBar: EditText = findViewById(R.id.searchFilter)
 
         val listView: ListView = findViewById(R.id.listViewSongs) // The list view on the main page
         val adapter = ArrayAdapter<String>(this, R.layout.listview_layout_songs,R.id.name, nameSong) // The adatater to link the array of song + the listView
         listView.adapter = adapter
 
+        //To add the searchbar
+        searchBar.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(p0: Editable?) {
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                adapter.getFilter().filter(p0)
+            }
 
-
+        })
 
         val mediaPlayer = MediaPlayer()
 
         listView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
             // do something...
 
-
+            println(context.getExternalFilesDir("sdcard/Music/").toString())
             val itemValue = listView.getItemAtPosition(position).toString()
             val file = File(context.getExternalFilesDir("sdcard/Music/").toString() + "/" + itemValue )
             val u: Uri = Uri.fromFile(file)
