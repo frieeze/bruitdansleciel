@@ -4,36 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:keepScreenOn="true">
+    tools:context=".fragment.TweetsFragment">
 
+    <TextView
+        android:id="@+id/recherche"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="52dp"
+        android:gravity="center"
+        android:text="Recherche"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/pushButton"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="156dp"
-        android:layout_marginEnd="92dp"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="155dp"
-        android:text="Keep Press"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/search_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="70dp"
+        android:text="search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/listViewSongs"
+        android:layout_width="282dp"
+        android:layout_height="466dp"
+        android:layout_marginTop="132dp"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@android:color/black" />
+        android:clickable="true"
+        />
 
-    <TextView
-        android:id="@+id/textView"
+
+
+
+    <Button
+        android:id="@+id/play_pause_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginStart="30dp"
-        android:text="Release when ur done"
-        app:layout_constraintBottom_toTopOf="@id/pushButton"
+        android:layout_marginBottom="40dp"
+        android:text="Play"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/listViewSongs"
+        app:layout_constraintVertical_bias="1.0" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
