@@ -23,7 +23,6 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 
 
 
-
 class MainActivity : AppCompatActivity() {
 
     private var mediaPlayer: MediaPlayer? = null
@@ -38,8 +37,6 @@ class MainActivity : AppCompatActivity() {
         val pathToSong: String = context.getExternalFilesDir("sdcard/Music/").toString()
         val fileDirectory = File(pathToSong); //The folder w/ every songs
 
-
-
         val nameSong: ArrayList<String> = ArrayList()
         getAllSongs(nameSong)   //ON recupère tous les sons dans le repertoire sdcard/music/
 
@@ -53,8 +50,7 @@ class MainActivity : AppCompatActivity() {
         listView.adapter = adapter
 
 
-        val file = File(context.getExternalFilesDir("sdcard/Music/").toString() + "/song.mp3")
-        val u: Uri = Uri.fromFile(file)
+
 
         val mediaPlayer = MediaPlayer()
 
@@ -84,8 +80,6 @@ class MainActivity : AppCompatActivity() {
         //    val u: Uri = Uri.fromFile(file)
         //    mediaPlayer = MediaPlayer.create(this, u)
         //}
-
-
 
         //mediaPlayer = MediaPlayer.create(this, u);// Pour jouer un son dans raw
         //mediaPlayer?.start()
