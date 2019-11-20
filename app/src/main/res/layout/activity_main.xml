@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="#FFFFFF">
+    android:backgroundTint="@color/darkGrey">
 
 
     <EditText
@@ -28,7 +28,7 @@
 
         android:backgroundTint="#FFFFFF"
         android:scaleType="fitCenter"
-        android:src="@drawable/loupe"
+        android:src="@drawable/icon_search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,7 +39,7 @@
         android:layout_marginTop="132dp"
         android:clickable="true"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
+        android:dividerHeight="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

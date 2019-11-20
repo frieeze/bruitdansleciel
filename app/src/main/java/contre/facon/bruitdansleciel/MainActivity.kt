@@ -86,29 +86,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         //val file = File(context.getExternalFilesDir("sdcard/Music/jacky.mp3").toString() )
         //if(file.exists()){
         //    val u: Uri = Uri.fromFile(file)
