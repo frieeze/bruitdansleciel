@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
-
+    android:backgroundTint="#FFFFFF">
 
 
     <EditText
@@ -20,13 +19,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/search_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="52dp"
         android:layout_marginEnd="70dp"
-        android:text="search"
+
+        android:backgroundTint="#FFFFFF"
+        android:scaleType="fitCenter"
+        android:src="@drawable/loupe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,15 +37,12 @@
         android:layout_width="282dp"
         android:layout_height="466dp"
         android:layout_marginTop="132dp"
+        android:clickable="true"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:clickable="true"
-        />
-
-
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <Button
