@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.progur.droidmelody.SongFinder
 import kotlinx.android.synthetic.main.listview_layout_songs.view.*
 
-class AnimalAdapter(val items : ArrayList<String>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
+class songAdapter(val items : ArrayList<SongFinder.Song>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
 
 
     // Gets the number of animals in the list
@@ -23,7 +24,7 @@ class AnimalAdapter(val items : ArrayList<String>, val context: Context) : Recyc
 
     // Binds each animal in the ArrayList to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder?.songName?.text = items.get(position)
+        holder?.songName?.text = items.get(position).title
     }
 }
 
