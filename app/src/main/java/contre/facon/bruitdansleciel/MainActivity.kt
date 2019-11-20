@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.room.Entity
 
 
 class MainActivity : AppCompatActivity() {
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         getAllSongs(nameSong)   //ON recupère tous les sons dans le repertoire sdcard/music/
 
 
-        println("-----------------------------------------" + pathToSong.toString())
+
 
         val searchBar: EditText = findViewById(R.id.searchFilter)
 
@@ -83,6 +84,28 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
