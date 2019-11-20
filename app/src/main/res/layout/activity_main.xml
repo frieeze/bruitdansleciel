@@ -32,14 +32,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView
-        android:id="@+id/listViewSongs"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSongs"
         android:layout_width="282dp"
         android:layout_height="466dp"
         android:layout_marginTop="132dp"
         android:clickable="true"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0dp"
+        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/listViewSongs"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewSongs"
         app:layout_constraintVertical_bias="1.0" />
 
 
