@@ -8,9 +8,13 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Build
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,7 +33,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 
-class MainActivity : Activity(), SongClickListener, SongsListChangeListner, PlayerListener {
+class MainActivity : AppCompatActivity(),SongClickListener, SongsListChangeListner, PlayerListener {
 
 
     private var songsArray: List<SongFinder.Song> = listOf()
@@ -55,6 +59,7 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner, Play
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -248,4 +253,28 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner, Play
             notificationManager.cancelAll()
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here.
+        val id = item.getItemId()
+
+        if (id == R.id.sortByArtist) {
+            Toast.makeText(this, "Sort by Artist", Toast.LENGTH_LONG).show()
+            return true
+        }
+        if (id == R.id.sortByAlbum) {
+            Toast.makeText(this, "Sort by Album", Toast.LENGTH_LONG).show()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+
+    }
+
 }
