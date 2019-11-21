@@ -49,17 +49,16 @@
                 android:layout_height="75dp">
 
                 <TextView
-                    android:id="@+id/lecture_layout_song_name"
+                    android:id="@+id/lecture_layout_songName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
                     android:text="Coucou" />
 
                 <SeekBar
                     android:id="@+id/seekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/lecture_layout_song_name"
+                    android:layout_below="@id/lecture_layout_songName"
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="10dp"

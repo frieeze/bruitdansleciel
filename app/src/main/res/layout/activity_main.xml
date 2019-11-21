@@ -7,28 +7,6 @@
     android:background="@color/grey">
 
 
-    <EditText
-        android:id="@+id/searchFilter"
-        android:layout_width="232dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="32dp"
-        android:hint="Search"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <ImageButton
-        android:id="@+id/search_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="52dp"
-        android:backgroundTint="@color/grey"
-        android:src="@drawable/icon_search"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSongs"
         android:layout_width="279dp"
@@ -46,33 +24,50 @@
 
     <RelativeLayout
         android:id="@+id/little_song_layout"
-        android:layout_width="390dp"
-        android:layout_height="149dp"
-        android:layout_marginTop="492dp"
-        android:background="@drawable/dark_grey_round_corners"
+        android:layout_width="0dp"
+        android:layout_height="183dp"
+        android:background="@color/darkGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchFilter">
+        app:layout_constraintHeight_percent="0.25"
+        app:layout_constraintStart_toStartOf="parent">
 
         <RelativeLayout
             android:id="@+id/song_info"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="80dp">
 
             <TextView
                 android:id="@+id/song_info_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp" />
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp" />
+
+            <TextView
+                android:id="@+id/artistName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/song_info_text"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="artist" />
+
+            <TextView
+                android:id="@+id/albumName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/artistName"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="album" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/song_info_text"
+                android:layout_alignParentBottom="true"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="30dp" />
@@ -83,7 +78,7 @@
             android:id="@+id/buttons_layout"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:layout_below="@id/song_info">
+            android:layout_alignParentBottom="true">
 
             <ImageButton
                 android:id="@+id/next_button"
