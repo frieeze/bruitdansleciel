@@ -9,29 +9,39 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Build
 import android.widget.ImageButton
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.progur.droidmelody.SongFinder
+import contre.facon.bruitdansleciel.`interface`.PlayerListener
 import contre.facon.bruitdansleciel.adapter.SongsAdapter
 import contre.facon.bruitdansleciel.`interface`.SongClickListener
 import contre.facon.bruitdansleciel.`interface`.SongsListChangeListner
 import contre.facon.bruitdansleciel.helper.SongHelper
 import contre.facon.bruitdansleciel.service.Player
 import contre.facon.bruitdansleciel.utils.Constants
+import kotlinx.coroutines.delay
+import org.jetbrains.anko.AnkoAsyncContext
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 
-class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
+class MainActivity : Activity(), SongClickListener, SongsListChangeListner, PlayerListener {
 
 
     private var songsArray: List<SongFinder.Song> = listOf()
+    private var progressBarHandlerActivated: Boolean = false
 
     private lateinit var playPauseButton: ImageButton
     private lateinit var loopButton: ImageButton
     private lateinit var randomButton: ImageButton
     private lateinit var nextButton: ImageButton
     private lateinit var previousButton: ImageButton
+    private lateinit var songInfoText: TextView
+    private lateinit var progressBar: ProgressBar
 
 
     private lateinit var songHelper: SongHelper
@@ -86,14 +96,14 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
     }
 
     private fun initialise() {
-        linkButtons()
+        initViewLinks()
 
         songHelper = SongHelper(applicationContext, this)
         val manager = createNotificationChannel()
         if (manager != null) {
             notificationManager = manager
         }
-        audioPlayer = Player(this, notificationManager, songsArray, false)
+        audioPlayer = Player(this, this, notificationManager, songsArray)
 
         getAllSongs()
 
@@ -108,18 +118,21 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
 
     }
 
-    private fun linkButtons() {
+    private fun initViewLinks() {
+        songInfoText = findViewById(R.id.song_info_text)
+
         playPauseButton = findViewById(R.id.play_pause_button)
         loopButton = findViewById(R.id.loop_button)
         randomButton = findViewById(R.id.random_button)
         nextButton = findViewById(R.id.next_button)
         previousButton = findViewById(R.id.previous_button)
+        progressBar = findViewById(R.id.progressBar)
 
         playPauseButton.setOnClickListener {
             if (audioPlayer.getPlaying() == false) {
                 audioPlayer.playPauseSong()
                 playPauseButton.setBackgroundResource(R.drawable.pause_button)
-            } else {
+            } else if (audioPlayer.getPlaying() == true) {
                 audioPlayer.playPauseSong()
                 playPauseButton.setBackgroundResource(R.drawable.play_button)
             }
@@ -136,7 +149,7 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
         }
 
         randomButton.setOnClickListener {
-            if (audioPlayer.random == false) {
+            if (audioPlayer.getRandom() == false) {
                 randomButton.setBackgroundResource(R.drawable.random_button_clicked)
                 audioPlayer.setRandom()
             } else {
@@ -153,20 +166,47 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
         }
     }
 
+    //To retreive all songs device's memory
+    private fun getAllSongs() {
+        songHelper.scanDeviceMemory(contentResolver)
+    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (notificationManager is NotificationManager) {
-            notificationManager.cancelAll()
+    fun progressBarHandler() {
+        doAsync {
+            do {
+                var (current, duration) = audioPlayer.getProgress()
+
+                if (duration == 0) {
+                    uiThread {
+                        progressBar.progress = 0
+                    }
+                } else {
+                    var ratio: Int = ((current/duration)*100)
+                    uiThread { progressBar.progress =  ratio}
+                }
+                Thread.sleep(200)
+            } while (duration != 0)
+            progressBarHandlerActivated = false
         }
     }
 
+    override fun onPlaySong(song: SongFinder.Song) {
+        songInfoText.text = song.title
+        if (!progressBarHandlerActivated) {
+            progressBarHandlerActivated = true
+            progressBarHandler()
+        }
 
-    //To retreive all song on the sd card
-    private fun getAllSongs() {
-        //songHelper.getAllFromDatabase()
-        songHelper.scanDeviceMemory(contentResolver)
     }
+
+    override fun onPlayPauseButtonChange() {
+        if (audioPlayer.getPlaying() == true) {
+            playPauseButton.setBackgroundResource(R.drawable.pause_button)
+        } else {
+            playPauseButton.setBackgroundResource(R.drawable.play_button)
+        }
+    }
+
 
     override fun onSongListChange(songList: List<SongFinder.Song>) {
         songsArray = songList
@@ -200,5 +240,12 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
             return notificationManager
         }
         return null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (notificationManager is NotificationManager) {
+            notificationManager.cancelAll()
+        }
     }
 }

@@ -1,28 +1,31 @@
 package contre.facon.bruitdansleciel.service
 
-import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
-import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.progur.droidmelody.SongFinder
 import contre.facon.bruitdansleciel.R
+import contre.facon.bruitdansleciel.`interface`.PlayerListener
 import contre.facon.bruitdansleciel.reciever.NotifBroadcastReciever
 import contre.facon.bruitdansleciel.utils.Constants
 import kotlin.random.Random
 
 class Player(
     val context: Context,
+    val mListener: PlayerListener,
     val notificationManager: NotificationManager,
-    var songList: List<SongFinder.Song>,
-    var random: Boolean
+    var songList: List<SongFinder.Song>
 ) {
     private val mediaPlayer: MediaPlayer = MediaPlayer()
-    private lateinit var currentSong: SongFinder.Song
+    private var currentSong: SongFinder.Song? = null
+    private var loop: Boolean = false
+    private var random: Boolean = false
 
 
     fun playSong(song: SongFinder.Song) {
@@ -33,20 +36,27 @@ class Player(
             playNextSong()
         }
         mediaPlayer.prepare()
+        mediaPlayer.isLooping = loop
         mediaPlayer.start()
+        mListener.onPlaySong(song)
         playerNotification(song)
     }
 
-    fun playPauseSong() {
+    fun playPauseSong(): Boolean {
+        if (currentSong == null) return false
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
         } else {
             mediaPlayer.start()
         }
+        return true
     }
 
     fun setLoop() {
-        mediaPlayer.isLooping = !mediaPlayer.isLooping
+        if (currentSong != null) {
+            mediaPlayer.isLooping = !mediaPlayer.isLooping
+        }
+        loop = !loop
     }
 
     fun setRandom() {
@@ -65,6 +75,8 @@ class Player(
         val index = songList.indexOf(currentSong)
         if (index >= songList.size - 1) {
             mediaPlayer.reset()
+            currentSong = null
+            mListener.onPlayPauseButtonChange()
             return
         }
         playSong(songList[index + 1])
@@ -73,9 +85,11 @@ class Player(
     }
 
     fun playPreviousSong() {
-        val index = songList.indexOf(currentSong)
+        if (currentSong == null) return
+        val index = songList.indexOf(currentSong!!)
         if (index == 0) {
-            playSong(currentSong)
+            playSong(currentSong!!)
+            return
         }
         playSong(songList[index - 1])
 
@@ -110,12 +124,22 @@ class Player(
         }
     }
 
-    fun getPlaying(): Boolean {
+    fun getPlaying(): Boolean? {
+        if (currentSong == null) return null
         return mediaPlayer.isPlaying
     }
 
     fun getLoop(): Boolean {
-        return mediaPlayer.isLooping
+        return loop
+    }
+
+    fun getRandom(): Boolean {
+        return random
+    }
+
+    fun getProgress(): Pair<Int, Int> {
+        if (currentSong == null) return Pair(0, 0)
+        return Pair(mediaPlayer.currentPosition, mediaPlayer.duration)
     }
 
 }
