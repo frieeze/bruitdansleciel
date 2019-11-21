@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:background="@color/darkGrey">
+        android:background="@color/grey">
 
         <RelativeLayout
             android:id="@+id/picture_layout"
@@ -37,8 +37,11 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_below="@id/picture_layout"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="25dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/dark_grey_round_corners">
 
             <RelativeLayout
                 android:id="@+id/song_name_layout"
@@ -69,7 +72,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/buttons_layout"
+                android:id="@+id/lecture_buttons_layout"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:layout_below="@id/song_name_layout">
@@ -93,6 +96,16 @@
                     app:srcCompat="@drawable/next_button" />
 
                 <ImageButton
+                    android:id="@+id/lecture_layout_random_button"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="25dp"
+                    android:background="@color/darkGrey"
+                    app:srcCompat="@drawable/random_button" />
+
+                <ImageButton
                     android:id="@+id/lecture_layout_previous_button"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
@@ -100,7 +113,17 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="100dp"
                     android:background="@color/darkGrey"
-                    app:srcCompat="@drawable/next_button" />
+                    app:srcCompat="@drawable/previous_button" />
+
+                <ImageButton
+                    android:id="@+id/lecture_layout_loop_button"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="25dp"
+                    android:background="@color/darkGrey"
+                    app:srcCompat="@drawable/loop_button" />
             </RelativeLayout>
         </RelativeLayout>
 

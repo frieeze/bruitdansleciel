@@ -1,0 +1,5 @@
+<resources>
+
+    <dimen name="round_corner_size">7dp</dimen>
+
+</resources>

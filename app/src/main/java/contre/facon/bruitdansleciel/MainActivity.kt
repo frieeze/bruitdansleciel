@@ -128,11 +128,11 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
         playPauseButton.setOnClickListener {
             if (isPlayPauseClicked == false) {
                 audioPlayer.playPauseSong()
-                playPauseButton.setBackgroundResource(R.drawable.play_button)
+                playPauseButton.setBackgroundResource(R.drawable.pause_button)
                 isPlayPauseClicked = true
             } else {
                 audioPlayer.playPauseSong()
-                playPauseButton.setBackgroundResource(R.drawable.pause_button)
+                playPauseButton.setBackgroundResource(R.drawable.play_button)
                 isPlayPauseClicked = false
             }
         }
