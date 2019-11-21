@@ -118,7 +118,6 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
         mediaPlayer.reset()
         mediaPlayer.setDataSource(getApplicationContext(), uri);
         mediaPlayer.prepare()
-        play_pause_button.text = "Pause"
         mediaPlayer.start();
     }
 

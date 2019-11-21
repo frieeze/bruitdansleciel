@@ -51,7 +51,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/listViewSongs"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewSongs"
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
@@ -64,7 +64,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.113"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/listViewSongs"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewSongs"
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
@@ -77,7 +77,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.903"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/listViewSongs"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewSongs"
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
@@ -90,7 +90,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.709"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/listViewSongs"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewSongs"
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
