@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
+import android.widget.ImageButton
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -34,6 +35,15 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
 
 
     private var songsArray: List<SongFinder.Song> = listOf<SongFinder.Song>()
+
+    private lateinit var playPauseButton: ImageButton
+    private lateinit var loopButton: ImageButton
+    private lateinit var randomButton: ImageButton
+    private lateinit var nextButton: ImageButton
+    private var isPlayPauseClicked: Boolean? = false
+    private var isLoopClicked: Boolean? = false
+    private var isRandomCLicked: Boolean? = false
+
 
     private lateinit var songHelper: SongHelper
     private lateinit var audioPlayer: Player
@@ -87,6 +97,7 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
     }
 
     private fun initialise() {
+        linkButtons()
 
         songHelper = SongHelper(applicationContext, this)
         val manager = createNotificationChannel()
@@ -106,6 +117,47 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
             adapter = viewAdapter
         }
 
+    }
+
+    private fun linkButtons() {
+        playPauseButton = findViewById(R.id.play_pause_button)
+        loopButton = findViewById(R.id.loop_button)
+        randomButton = findViewById(R.id.random_button)
+        nextButton = findViewById(R.id.next_button)
+
+        playPauseButton.setOnClickListener {
+            if (isPlayPauseClicked == false) {
+                audioPlayer.playPauseSong()
+                playPauseButton.setBackgroundResource(R.drawable.play_button)
+                isPlayPauseClicked = true
+            } else {
+                audioPlayer.playPauseSong()
+                playPauseButton.setBackgroundResource(R.drawable.pause_button)
+                isPlayPauseClicked = false
+            }
+        }
+
+        loopButton.setOnClickListener {
+            if (isLoopClicked == false) {
+                audioPlayer.setLoop()
+                loopButton.setBackgroundResource(R.drawable.loop_button_clicked)
+                isLoopClicked = true
+            } else if (isLoopClicked == true) {
+                audioPlayer.setLoop()
+                loopButton.setBackgroundResource(R.drawable.loop_button)
+                isLoopClicked = false
+            }
+        }
+
+        randomButton.setOnClickListener {
+            if (isRandomCLicked == false) {
+                randomButton.setBackgroundResource(R.drawable.random_button_clicked)
+                isRandomCLicked = true
+            } else if (isRandomCLicked == true) {
+                randomButton.setBackgroundResource(R.drawable.random_button)
+                isRandomCLicked = false
+            }
+        }
     }
 
 

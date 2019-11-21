@@ -16,6 +16,7 @@ import contre.facon.bruitdansleciel.utils.Constants
 class Player(val context: Context, val notificationManager: NotificationManager) {
     private val mediaPlayer: MediaPlayer = MediaPlayer()
 
+
     fun playSong(song: SongFinder.Song) {
         mediaPlayer.reset()
         mediaPlayer.setDataSource(context, song.uri);
@@ -24,14 +25,18 @@ class Player(val context: Context, val notificationManager: NotificationManager)
         playerNotification(song)
     }
 
-    fun pauseSong() {
+    fun playPauseSong() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
-
         } else {
             mediaPlayer.start()
         }
     }
+
+    fun setLoop() {
+        mediaPlayer.isLooping = !mediaPlayer.isLooping
+    }
+
 
     fun playerNotification(song: SongFinder.Song) {
         if (notificationManager == null) return
@@ -56,6 +61,8 @@ class Player(val context: Context, val notificationManager: NotificationManager)
             notify(0, builder.build())
         }
     }
+
+
 
 
 }
