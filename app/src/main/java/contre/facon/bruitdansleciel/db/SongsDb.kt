@@ -4,6 +4,7 @@ import com.progur.droidmelody.SongFinder
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.insertOrThrow
 import org.jetbrains.anko.db.select
+import java.lang.Exception
 
 
 class SongsDb(private val dbHelper: SongDBHelper) {
@@ -26,7 +27,11 @@ class SongsDb(private val dbHelper: SongDBHelper) {
 
     fun saveMultipleSongs(songs: List<SongFinder.Song>) {
         for (s in songs) {
-            saveSong(s)
+            try {
+                saveSong(s)
+            } catch (e: Exception) {
+                continue
+            }
         }
     }
 }

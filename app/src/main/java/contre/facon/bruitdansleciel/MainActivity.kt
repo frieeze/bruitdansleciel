@@ -7,14 +7,9 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Build
 import android.widget.ImageButton
-import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,27 +17,21 @@ import com.progur.droidmelody.SongFinder
 import contre.facon.bruitdansleciel.adapter.SongsAdapter
 import contre.facon.bruitdansleciel.`interface`.SongClickListener
 import contre.facon.bruitdansleciel.`interface`.SongsListChangeListner
-import contre.facon.bruitdansleciel.db.SongDBHelper
-import contre.facon.bruitdansleciel.db.SongsDb
 import contre.facon.bruitdansleciel.helper.SongHelper
 import contre.facon.bruitdansleciel.service.Player
 import contre.facon.bruitdansleciel.utils.Constants
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
 
 
 class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
 
 
-    private var songsArray: List<SongFinder.Song> = listOf<SongFinder.Song>()
+    private var songsArray: List<SongFinder.Song> = listOf()
 
     private lateinit var playPauseButton: ImageButton
     private lateinit var loopButton: ImageButton
     private lateinit var randomButton: ImageButton
     private lateinit var nextButton: ImageButton
-    private var isPlayPauseClicked: Boolean? = false
-    private var isLoopClicked: Boolean? = false
-    private var isRandomCLicked: Boolean? = false
+    private lateinit var previousButton: ImageButton
 
 
     private lateinit var songHelper: SongHelper
@@ -104,7 +93,7 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
         if (manager != null) {
             notificationManager = manager
         }
-        audioPlayer = Player(this, notificationManager)
+        audioPlayer = Player(this, notificationManager, songsArray, false)
 
         getAllSongs()
 
@@ -124,39 +113,43 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
         loopButton = findViewById(R.id.loop_button)
         randomButton = findViewById(R.id.random_button)
         nextButton = findViewById(R.id.next_button)
+        previousButton = findViewById(R.id.previous_button)
 
         playPauseButton.setOnClickListener {
-            if (isPlayPauseClicked == false) {
+            if (audioPlayer.getPlaying() == false) {
                 audioPlayer.playPauseSong()
                 playPauseButton.setBackgroundResource(R.drawable.pause_button)
-                isPlayPauseClicked = true
             } else {
                 audioPlayer.playPauseSong()
                 playPauseButton.setBackgroundResource(R.drawable.play_button)
-                isPlayPauseClicked = false
             }
         }
 
         loopButton.setOnClickListener {
-            if (isLoopClicked == false) {
+            if (audioPlayer.getLoop() == false) {
                 audioPlayer.setLoop()
                 loopButton.setBackgroundResource(R.drawable.loop_button_clicked)
-                isLoopClicked = true
-            } else if (isLoopClicked == true) {
+            } else {
                 audioPlayer.setLoop()
                 loopButton.setBackgroundResource(R.drawable.loop_button)
-                isLoopClicked = false
             }
         }
 
         randomButton.setOnClickListener {
-            if (isRandomCLicked == false) {
+            if (audioPlayer.random == false) {
                 randomButton.setBackgroundResource(R.drawable.random_button_clicked)
-                isRandomCLicked = true
-            } else if (isRandomCLicked == true) {
+                audioPlayer.setRandom()
+            } else {
                 randomButton.setBackgroundResource(R.drawable.random_button)
-                isRandomCLicked = false
+                audioPlayer.setRandom()
             }
+        }
+        nextButton.setOnClickListener {
+            audioPlayer.playNextSong()
+        }
+
+        previousButton.setOnClickListener {
+            audioPlayer.playPreviousSong()
         }
     }
 
@@ -171,7 +164,7 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
 
     //To retreive all song on the sd card
     private fun getAllSongs() {
-        songHelper.getAllFromDatabase()
+        //songHelper.getAllFromDatabase()
         songHelper.scanDeviceMemory(contentResolver)
     }
 
@@ -179,11 +172,12 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
         songsArray = songList
         val songAdapter = SongsAdapter(songsArray, this)
         recyclerView.adapter = songAdapter
+        audioPlayer.updateSongList(songsArray)
     }
 
     override fun onSongClick(song: SongFinder.Song) {
         audioPlayer.playSong(song)
-        toast("Playing : " + song.title)
+        playPauseButton.setBackgroundResource(R.drawable.pause_button)
     }
 
     private fun createNotificationChannel(): NotificationManager? {

@@ -19,6 +19,7 @@ class SongHelper(val context: Context, val mListener: SongsListChangeListner) {
 
     fun scanDeviceMemory(contentResolver: ContentResolver) {
         doAsync {
+            getAllFromDatabase()
             val songFinder = SongFinder(contentResolver)
             songFinder.prepare()
             database.saveMultipleSongs(songFinder.allSongs)
