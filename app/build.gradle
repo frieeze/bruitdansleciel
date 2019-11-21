@@ -40,9 +40,15 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
+    implementation 'com.progur.droidmelody:droidmelody:1.0.2'
+
+
+    dependencies {
+        implementation "org.jetbrains.anko:anko:$anko_version"
+    }
+
 
     //Recycle view
-    def recyclerview_version = "1.0.0"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     // For control over item selection of both touch and mouse driven selection
     implementation "androidx.recyclerview:recyclerview-selection:$recyclerview_version"

@@ -1,165 +1,176 @@
 package contre.facon.bruitdansleciel
 
+import android.Manifest
+import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
-import android.media.Image
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.media.MediaPlayer
 import android.net.Uri
-import android.widget.*
+import android.os.Build
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
-import android.text.Editable
-import android.text.TextWatcher
-import kotlinx.android.synthetic.*
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.progur.droidmelody.SongFinder
+import contre.facon.bruitdansleciel.adapter.SongsAdapter
+import contre.facon.bruitdansleciel.`interface`.SongClickListener
+import contre.facon.bruitdansleciel.`interface`.SongsListChangeListner
+import contre.facon.bruitdansleciel.db.SongDBHelper
+import contre.facon.bruitdansleciel.db.SongsDb
+import contre.facon.bruitdansleciel.helper.SongHelper
+import contre.facon.bruitdansleciel.utils.Constants
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
 
-    private var mediaPlayer: MediaPlayer? = null
+    private val mediaPlayer: MediaPlayer = MediaPlayer()
+    private var songsArray: List<SongFinder.Song> = listOf<SongFinder.Song>()
+    private lateinit var songHelper: SongHelper
+
+    private lateinit var notificationManager: NotificationManager
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (supportActionBar != null)
-            supportActionBar?.hide()
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
 
-        val context: Context = this.applicationContext
+            // Ask for the permission
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                Constants.Permission.READ_STORAGE_PERMISSION_REQUEST
 
-        //Place where all our songs are stored
-        val pathToSong: String = context.getExternalFilesDir("sdcard/Music/").toString()
-        val fileDirectory = File(pathToSong); //The folder w/ every songs
+            )
 
-        val nameSong: ArrayList<String> = ArrayList()
-        getAllSongs(nameSong)   //ON recupère tous les sons dans le repertoire sdcard/music/
-
-
-        val searchBar: EditText = findViewById(R.id.searchFilter)
-
-        val listView: ListView = findViewById(R.id.listViewSongs) // The list view on the main page
-        val adapter = ArrayAdapter<String>(
-            this,
-            R.layout.listview_layout_songs,
-            R.id.song_name,
-            nameSong
-        ) // The adatater to link the array of song + the listView
-        listView.adapter = adapter
-
-        //To add the searchbar
-        searchBar.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                adapter.getFilter().filter(p0)
-            }
-
-        })
-
-        val mediaPlayer = MediaPlayer()
-
-        listView.onItemClickListener =
-            AdapterView.OnItemClickListener { adapterView, view, position, id ->
-                // do something...
-
-                println(context.getExternalFilesDir("sdcard/Music/").toString())
-                val itemValue = listView.getItemAtPosition(position).toString()
-                val file =
-                    File(context.getExternalFilesDir("sdcard/Music/").toString() + "/" + itemValue)
-                val u: Uri = Uri.fromFile(file)
-                if (file.exists()) {
-                    println("yesyes")
-                    mediaPlayer.reset()
-                    mediaPlayer.setDataSource(getApplicationContext(), u);
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                    val u: Uri = Uri.fromFile(file)
-
-                }
-            }
-
-
-        //val file = File(context.getExternalFilesDir("sdcard/Music/jacky.mp3").toString() )
-        //if(file.exists()){
-        //    val u: Uri = Uri.fromFile(file)
-        //    mediaPlayer = MediaPlayer.create(this, u)
-        //}
-
-        //mediaPlayer = MediaPlayer.create(this, u);// Pour jouer un son dans raw
-        //mediaPlayer?.start()
-        //Toast.makeText(this,"Music playing.",Toast.LENGTH_SHORT).show();
-
-
-        val playPauseButton = findViewById<ImageButton>(R.id.play_pause_button)
-        val loopButton = findViewById<ImageButton>(R.id.loop_button)
-        val randomButton = findViewById<ImageButton>(R.id.random_button)
-        val nextButton = findViewById<ImageButton>(R.id.next_button)
-        var isPlayPauseClicked: Boolean? = false
-        var isLoopClicked: Boolean? = false
-        var isRandomCLicked: Boolean? = false
-
-        playPauseButton.setOnClickListener {
-            if (isPlayPauseClicked == false) {
-                mediaPlayer?.pause()
-                playPauseButton.setBackgroundResource(R.drawable.pause_button)
-                isPlayPauseClicked = true
-            } else if (isPlayPauseClicked == true) {
-                mediaPlayer?.start()
-                playPauseButton.setBackgroundResource(R.drawable.play_button)
-                isPlayPauseClicked = false
-            }
+        } else {
+            initSongList()
         }
-
-        loopButton.setOnClickListener {
-            if (isLoopClicked == false) {
-                mediaPlayer.setLooping(true)
-                loopButton.setBackgroundResource(R.drawable.loop_button_clicked)
-                isLoopClicked = true
-            } else if (isLoopClicked == true) {
-                mediaPlayer.setLooping(false)
-                loopButton.setBackgroundResource(R.drawable.loop_button)
-                isLoopClicked = false
-            }
-        }
-
-        randomButton.setOnClickListener {
-            if (isRandomCLicked == false) {
-                randomButton.setBackgroundResource(R.drawable.random_button_clicked)
-                isRandomCLicked = true
-            } else if (isRandomCLicked == true) {
-                randomButton.setBackgroundResource(R.drawable.random_button)
-                isRandomCLicked = false
-            }
-        }
-
-        nextButton.setOnClickListener {
-
-        }
-
-
-
-        //To retreive all song on the sd card
-
     }
 
-    fun getAllSongs(nameSong: ArrayList<String>) {
-        val context: Context = this.applicationContext
-        val pathToSong: String = context.getExternalFilesDir("sdcard/Music/").toString()
-        val fileDirectory = File(pathToSong); //The folder w/ every songs
-        val reg_mp3: Regex = "(\\/.*\\.+mp3)\$".toRegex() // to spot every .mp3 files
-
-
-
-        fileDirectory.walk().forEach {
-
-            if (reg_mp3.containsMatchIn(it.toString())) {
-                nameSong.add(it.name.toString())
-
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            Constants.Permission.READ_STORAGE_PERMISSION_REQUEST -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    initSongList()
+                }
+                return
+            }
+            else -> {
 
             }
         }
+    }
+
+    private fun initSongList() {
+
+        songHelper = SongHelper(applicationContext, this)
+
+        getAllSongs()
+
+        viewManager = LinearLayoutManager(this)
+        viewAdapter = SongsAdapter(songsArray, this)
+
+        recyclerView = findViewById<RecyclerView>(R.id.recyclerViewSongs).apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+
+        val manager = createNotificationChannel()
+        if (manager != null) {
+            notificationManager = manager
+        }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (notificationManager is NotificationManager) {
+            notificationManager.cancelAll()
+        }
+    }
+
+
+    private fun playSong(uri: Uri) {
+        mediaPlayer.reset()
+        mediaPlayer.setDataSource(getApplicationContext(), uri);
+        mediaPlayer.prepare()
+        play_pause_button.text = "Pause"
+        mediaPlayer.start();
+    }
+
+    //To retreive all song on the sd card
+    private fun getAllSongs() {
+        songHelper.getAllFromDatabase()
+        songHelper.scanDeviceMemory(contentResolver)
+    }
+
+    override fun onSongListChange(songList: List<SongFinder.Song>) {
+        songsArray = songList
+        val songAdapter = SongsAdapter(songsArray, this)
+        recyclerView.adapter = songAdapter
+    }
+
+    override fun onSongClick(song: SongFinder.Song) {
+        playSong(song.uri)
+        playerNotification(song.title, song.artist)
+        toast("Playing : " + song.title)
+    }
+
+    fun playerNotification(title: String, text: String) {
+        if (notificationManager == null) return
+        val builder =
+            NotificationCompat.Builder(this, "cacadvisor")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        with(NotificationManagerCompat.from(this)) {
+            notify(0, builder.build())
+        }
+    }
+
+    private fun createNotificationChannel(): NotificationManager? {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "cacadvisor"
+            val descriptionText = "cacadvisor"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("cacadvisor", name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            channel.setSound(null, null)
+            notificationManager.createNotificationChannel(channel)
+            return notificationManager
+        }
+        return null
     }
 }
