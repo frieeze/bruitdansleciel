@@ -1,4 +1,4 @@
-package contre.facon.bruitdansleciel.Adapter
+package contre.facon.bruitdansleciel.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.progur.droidmelody.SongFinder
-import contre.facon.bruitdansleciel.Interface.Listener
+import contre.facon.bruitdansleciel.`interface`.SongClickListener
 import contre.facon.bruitdansleciel.R
 
-class SongsAdapter(val mDataset: List<SongFinder.Song>, val mListener: Listener) :
+class SongsAdapter(val mDataset: List<SongFinder.Song>, val mListener: SongClickListener) :
     RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
 
 
@@ -34,10 +34,15 @@ class SongsAdapter(val mDataset: List<SongFinder.Song>, val mListener: Listener)
     override fun getItemCount() = mDataset.size
 
 
-    class ViewHolder(v: View, val  mDataset: List<SongFinder.Song>, val  mListener: Listener) : RecyclerView.ViewHolder(v),
+    class ViewHolder(
+        v: View,
+        val mDataset: List<SongFinder.Song>,
+        val mListener: SongClickListener
+    ) : RecyclerView.ViewHolder(v),
         View.OnClickListener {
         val songTitle: TextView = v.findViewById<TextView>(R.id.songTitle)
         var songIndex: Int = 0;
+
         init {
             v.setOnClickListener(this)
         }

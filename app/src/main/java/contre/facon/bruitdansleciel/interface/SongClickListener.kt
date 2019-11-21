@@ -1,7 +1,7 @@
-package contre.facon.bruitdansleciel.Interface
+package contre.facon.bruitdansleciel.`interface`
 
 import com.progur.droidmelody.SongFinder
 
-interface Listener {
+interface SongClickListener {
     fun onSongClick(song: SongFinder.Song)
 }
