@@ -29,5 +29,5 @@ class AnimalAdapter(val items : ArrayList<String>, val context: Context) : Recyc
 
 class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     // Holds the TextView that will add each animal to
-    val songName = view.name
+    val songName = view.song_name
 }
