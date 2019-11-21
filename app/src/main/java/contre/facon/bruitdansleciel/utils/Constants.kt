@@ -6,4 +6,9 @@ class Constants {
             const val READ_STORAGE_PERMISSION_REQUEST: Int = 0
         }
     }
+    class Intents{
+        companion object{
+            const val CF_PLAYER_PAUSE: String = "contre.facon.bruitdansleciel.PLAYER_PAUSE"
+        }
+    }
 }

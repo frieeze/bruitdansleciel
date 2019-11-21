@@ -24,6 +24,7 @@ import contre.facon.bruitdansleciel.`interface`.SongsListChangeListner
 import contre.facon.bruitdansleciel.db.SongDBHelper
 import contre.facon.bruitdansleciel.db.SongsDb
 import contre.facon.bruitdansleciel.helper.SongHelper
+import contre.facon.bruitdansleciel.service.Player
 import contre.facon.bruitdansleciel.utils.Constants
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
@@ -31,10 +32,11 @@ import org.jetbrains.anko.toast
 
 class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
 
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
-    private var songsArray: List<SongFinder.Song> = listOf<SongFinder.Song>()
-    private lateinit var songHelper: SongHelper
 
+    private var songsArray: List<SongFinder.Song> = listOf<SongFinder.Song>()
+
+    private lateinit var songHelper: SongHelper
+    private lateinit var audioPlayer: Player
     private lateinit var notificationManager: NotificationManager
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -61,7 +63,7 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
             )
 
         } else {
-            initSongList()
+            initialise()
         }
     }
 
@@ -74,7 +76,7 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
         when (requestCode) {
             Constants.Permission.READ_STORAGE_PERMISSION_REQUEST -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    initSongList()
+                    initialise()
                 }
                 return
             }
@@ -84,9 +86,14 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
         }
     }
 
-    private fun initSongList() {
+    private fun initialise() {
 
         songHelper = SongHelper(applicationContext, this)
+        val manager = createNotificationChannel()
+        if (manager != null) {
+            notificationManager = manager
+        }
+        audioPlayer = Player(this, notificationManager)
 
         getAllSongs()
 
@@ -99,10 +106,6 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
             adapter = viewAdapter
         }
 
-        val manager = createNotificationChannel()
-        if (manager != null) {
-            notificationManager = manager
-        }
     }
 
 
@@ -113,13 +116,6 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
         }
     }
 
-
-    private fun playSong(uri: Uri) {
-        mediaPlayer.reset()
-        mediaPlayer.setDataSource(getApplicationContext(), uri);
-        mediaPlayer.prepare()
-        mediaPlayer.start();
-    }
 
     //To retreive all song on the sd card
     private fun getAllSongs() {
@@ -134,35 +130,22 @@ class MainActivity : Activity(), SongClickListener, SongsListChangeListner {
     }
 
     override fun onSongClick(song: SongFinder.Song) {
-        playSong(song.uri)
-        playerNotification(song.title, song.artist)
+        audioPlayer.playSong(song)
         toast("Playing : " + song.title)
-    }
-
-    fun playerNotification(title: String, text: String) {
-        if (notificationManager == null) return
-        val builder =
-            NotificationCompat.Builder(this, "cacadvisor")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-        with(NotificationManagerCompat.from(this)) {
-            notify(0, builder.build())
-        }
     }
 
     private fun createNotificationChannel(): NotificationManager? {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "cacadvisor"
-            val descriptionText = "cacadvisor"
+            val name = "Bruitdansleciel"
+            val descriptionText = "Lecture en cours ..."
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("cacadvisor", name, importance).apply {
-                description = descriptionText
-            }
+            val channel =
+                NotificationChannel("bruitdansleciel_notify_channe", name, importance).apply {
+                    description = descriptionText
+                }
             // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
