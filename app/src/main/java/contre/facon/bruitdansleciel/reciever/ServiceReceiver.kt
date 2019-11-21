@@ -3,14 +3,13 @@ package contre.facon.bruitdansleciel.reciever
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
-import contre.facon.bruitdansleciel.service.Player
+import contre.facon.bruitdansleciel.`interface`.PlayerListener
 
-class NotifBroadcastReciever : BroadcastReceiver() {
+class ServiceReceiver(val mListener: PlayerListener) : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        val local: Intent = Intent()
-        local.action = intent?.action
-        context?.sendBroadcast(local)
+        if (intent != null) {
+            mListener.onNotifyClick(intent.action.toString())
+        }
     }
 }

@@ -6,21 +6,21 @@
     android:background="@drawable/song_background">
 
     <TextView
-        android:id="@+id/songTitle"
+        android:id="@+id/song_Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="songName"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/artirstName"
+        android:id="@+id/artist_Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Artist"
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/albumName"
+        android:id="@+id/album_Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Album"
