@@ -247,10 +247,10 @@ class MainActivity : AppCompatActivity(), SongClickListener, SongsListChangeList
         songAlbumName.text = song.album
 
 
-        /*if (!progressBarHandlerActivated) {
+        if (!progressBarHandlerActivated) {
             progressBarHandlerActivated = true
             progressBarHandler()
-        }*/
+        }
 
     }
 
