@@ -28,6 +28,8 @@ class SongsAdapter(val mDataset: List<SongFinder.Song>, val mListener: SongClick
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.songTitle.text = mDataset[position].title
+        holder.songArtist.text = mDataset[position].artist
+        holder.songAlbum.text = mDataset[position].album
         holder.songIndex = position
     }
 
@@ -40,7 +42,9 @@ class SongsAdapter(val mDataset: List<SongFinder.Song>, val mListener: SongClick
         val mListener: SongClickListener
     ) : RecyclerView.ViewHolder(v),
         View.OnClickListener {
-        val songTitle: TextView = v.findViewById<TextView>(R.id.songTitle)
+        val songTitle: TextView = v.findViewById<TextView>(R.id.song_Title)
+        val songArtist: TextView = v.findViewById<TextView>(R.id.artist_Name)
+        val songAlbum: TextView = v.findViewById<TextView>(R.id.album_Name)
         var songIndex: Int = 0;
 
         init {

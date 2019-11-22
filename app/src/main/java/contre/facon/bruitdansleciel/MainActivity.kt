@@ -1,10 +1,11 @@
 package contre.facon.bruitdansleciel
 
 import android.Manifest
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Build
@@ -25,15 +26,15 @@ import contre.facon.bruitdansleciel.adapter.SongsAdapter
 import contre.facon.bruitdansleciel.`interface`.SongClickListener
 import contre.facon.bruitdansleciel.`interface`.SongsListChangeListner
 import contre.facon.bruitdansleciel.helper.SongHelper
+import contre.facon.bruitdansleciel.reciever.ServiceReceiver
 import contre.facon.bruitdansleciel.service.Player
 import contre.facon.bruitdansleciel.utils.Constants
-import kotlinx.coroutines.delay
-import org.jetbrains.anko.AnkoAsyncContext
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 
-class MainActivity : AppCompatActivity(),SongClickListener, SongsListChangeListner, PlayerListener {
+class MainActivity : AppCompatActivity(), SongClickListener, SongsListChangeListner,
+    PlayerListener {
 
 
     private var songsArray: List<SongFinder.Song> = listOf()
@@ -45,9 +46,11 @@ class MainActivity : AppCompatActivity(),SongClickListener, SongsListChangeListn
     private lateinit var nextButton: ImageButton
     private lateinit var previousButton: ImageButton
     private lateinit var songInfoText: TextView
+    private lateinit var songArtistName: TextView
+    private lateinit var songAlbumName: TextView
     private lateinit var progressBar: ProgressBar
 
-
+    private lateinit var broadcastReciever: BroadcastReceiver
     private lateinit var songHelper: SongHelper
     private lateinit var audioPlayer: Player
     private lateinit var notificationManager: NotificationManager
@@ -79,6 +82,12 @@ class MainActivity : AppCompatActivity(),SongClickListener, SongsListChangeListn
         } else {
             initialise()
         }
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("CF_PLAYER_PAUSE")
+        intentFilter.addAction("CF_PLAYER_NEXT")
+        intentFilter.addAction("CF_PLAYER_PREVIOUS")
+        broadcastReciever = ServiceReceiver(this)
+        registerReceiver(broadcastReciever, intentFilter)
     }
 
     override fun onRequestPermissionsResult(
@@ -132,6 +141,8 @@ class MainActivity : AppCompatActivity(),SongClickListener, SongsListChangeListn
         nextButton = findViewById(R.id.next_button)
         previousButton = findViewById(R.id.previous_button)
         progressBar = findViewById(R.id.progressBar)
+        songArtistName = findViewById(R.id.artistName)
+        songAlbumName = findViewById(R.id.album_Name)
 
         playPauseButton.setOnClickListener {
             if (audioPlayer.getPlaying() == false) {
@@ -179,27 +190,44 @@ class MainActivity : AppCompatActivity(),SongClickListener, SongsListChangeListn
     fun progressBarHandler() {
         doAsync {
             do {
-                var (current, duration) = audioPlayer.getProgress()
-
-                if (duration == 0) {
+                val ratio = audioPlayer.getProgress()
+                if (ratio == -1) {
                     uiThread {
                         progressBar.progress = 0
                     }
                 } else {
-                    var ratio: Int = ((current/duration)*100)
-                    uiThread { progressBar.progress =  ratio}
+                    uiThread { progressBar.progress = ratio }
                 }
-                Thread.sleep(200)
-            } while (duration != 0)
+                Thread.sleep(1000)
+            } while (ratio != -1)
             progressBarHandlerActivated = false
         }
     }
 
     override fun onPlaySong(song: SongFinder.Song) {
         songInfoText.text = song.title
-        if (!progressBarHandlerActivated) {
+        songArtistName.text = song.artist
+        songAlbumName.text = song.album
+
+        /*if (!progressBarHandlerActivated) {
             progressBarHandlerActivated = true
             progressBarHandler()
+        }*/
+
+    }
+
+    override fun onNotifyClick(message: String) {
+        if (message == "CF_PLAYER_PAUSE") {
+            audioPlayer.playPauseSong()
+            return
+        }
+        if (message == "CF_PLAYER_PREVIOUS") {
+            audioPlayer.playPreviousSong()
+            return
+        }
+        if (message == "CF_PLAYER_NEXT") {
+            audioPlayer.playNextSong()
+            return
         }
 
     }

@@ -29,7 +29,9 @@
             android:name=".reciever.NotifBroadcastReciever"
             android:exported="true">*
             <intent-filter>
-                <action android:name="android.intent.action.PLAYER_PAUSE"/>
+                <action android:name="android.intent.action.CF_PLAYER_PAUSE" />
+                <action android:name="android.intent.action.CF_PLAYER_NEXT" />
+                <action android:name="android.intent.action.CF_PLAYER_PREVIOUS" />
             </intent-filter>
         </receiver>
     </application>

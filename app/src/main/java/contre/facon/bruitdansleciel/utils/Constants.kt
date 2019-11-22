@@ -8,7 +8,9 @@ class Constants {
     }
     class Intents{
         companion object{
-            const val CF_PLAYER_PAUSE: String = "contre.facon.bruitdansleciel.PLAYER_PAUSE"
+            const val CF_PLAYER_PAUSE: String = "contre.facon.bruitdansleciel.CF_PLAYER_PAUSE"
+            const val CF_PLAYER_NEXT: String = "CF_PLAYER_NEXT"
+            const val CF_PLAYER_PREVIOUS: String = "CF_PLAYER_PREVIOUS"
         }
     }
 }
