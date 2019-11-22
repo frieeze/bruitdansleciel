@@ -44,7 +44,6 @@ class Player(
         mediaPlayer.prepare()
         mediaPlayer.isLooping = loop
         mediaPlayer.start()
-        playerNotification(currentSong!!)
         mListener.onPlaySong(song)
         playerNotification(song)
     }
@@ -82,6 +81,8 @@ class Player(
             mediaPlayer.reset()
             currentSong = null
             mListener.onPlayPauseButtonChange()
+            mListener.onPlayerStop()
+            removeNotification()
             return
         }
         if (random) {
@@ -151,6 +152,10 @@ class Player(
         }
     }
 
+    fun removeNotification() {
+        notificationManager.cancel(0)
+    }
+
     fun getPlaying(): Boolean? {
         if (currentSong == null) return null
         return mediaPlayer.isPlaying
@@ -167,6 +172,10 @@ class Player(
     fun getProgress(): Int {
         if (currentSong == null) return -1
         return mediaPlayer.currentPosition / mediaPlayer.duration * 100
+    }
+
+    fun getCurrent(): SongFinder.Song? {
+        return currentSong
     }
 
 }

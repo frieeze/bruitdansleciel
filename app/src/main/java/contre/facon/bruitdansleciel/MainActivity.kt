@@ -11,13 +11,11 @@ import android.os.Bundle
 import android.os.Build
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageButton
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.progur.droidmelody.SongFinder
@@ -25,6 +23,7 @@ import contre.facon.bruitdansleciel.`interface`.PlayerListener
 import contre.facon.bruitdansleciel.adapter.SongsAdapter
 import contre.facon.bruitdansleciel.`interface`.SongClickListener
 import contre.facon.bruitdansleciel.`interface`.SongsListChangeListner
+import contre.facon.bruitdansleciel.fragment.SongPlayerFragment
 import contre.facon.bruitdansleciel.helper.SongHelper
 import contre.facon.bruitdansleciel.reciever.ServiceReceiver
 import contre.facon.bruitdansleciel.service.Player
@@ -49,6 +48,7 @@ class MainActivity : AppCompatActivity(), SongClickListener, SongsListChangeList
     private lateinit var songArtistName: TextView
     private lateinit var songAlbumName: TextView
     private lateinit var progressBar: ProgressBar
+    private lateinit var songInfoClickable: RelativeLayout
 
     private lateinit var broadcastReciever: BroadcastReceiver
     private lateinit var songHelper: SongHelper
@@ -143,6 +143,7 @@ class MainActivity : AppCompatActivity(), SongClickListener, SongsListChangeList
         progressBar = findViewById(R.id.progressBar)
         songArtistName = findViewById(R.id.artistName)
         songAlbumName = findViewById(R.id.album_Name)
+        songInfoClickable = findViewById(R.id.song_info)
 
         playPauseButton.setOnClickListener {
             if (audioPlayer.getPlaying() == false) {
@@ -180,11 +181,40 @@ class MainActivity : AppCompatActivity(), SongClickListener, SongsListChangeList
         previousButton.setOnClickListener {
             audioPlayer.playPreviousSong()
         }
+
+        songInfoClickable.setOnClickListener {
+            (audioPlayer.getCurrent())?.let {
+                onExtendedPlayerDisplay()
+            }
+        }
     }
 
     //To retreive all songs device's memory
     private fun getAllSongs() {
         songHelper.scanDeviceMemory(contentResolver)
+    }
+
+    fun onExtendedPlayerDisplay() {
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        val fragment = SongPlayerFragment()
+        fragment.getPlayer(audioPlayer)
+        transaction.add(R.id.container, fragment)
+        transaction.addToBackStack(null).commit()
+
+    }
+
+    override fun syncWithExtended() {
+        onPlayPauseButtonChange()
+        if (audioPlayer.getLoop()) {
+            loopButton.setBackgroundResource(R.drawable.loop_button_clicked)
+        } else {
+            loopButton.setBackgroundResource(R.drawable.loop_button)
+        }
+        if (audioPlayer.getRandom()) {
+            randomButton.setBackgroundResource(R.drawable.random_button_clicked)
+        } else {
+            randomButton.setBackgroundResource(R.drawable.random_button)
+        }
     }
 
     fun progressBarHandler() {
@@ -209,6 +239,7 @@ class MainActivity : AppCompatActivity(), SongClickListener, SongsListChangeList
         songArtistName.text = song.artist
         songAlbumName.text = song.album
 
+
         /*if (!progressBarHandlerActivated) {
             progressBarHandlerActivated = true
             progressBarHandler()
@@ -216,9 +247,17 @@ class MainActivity : AppCompatActivity(), SongClickListener, SongsListChangeList
 
     }
 
+    override fun onPlayerStop() {
+        songInfoText.text = ""
+        songArtistName.text = ""
+        songAlbumName.text = ""
+
+    }
+
     override fun onNotifyClick(message: String) {
         if (message == "CF_PLAYER_PAUSE") {
             audioPlayer.playPauseSong()
+            onPlayPauseButtonChange()
             return
         }
         if (message == "CF_PLAYER_PREVIOUS") {
@@ -239,7 +278,6 @@ class MainActivity : AppCompatActivity(), SongClickListener, SongsListChangeList
             playPauseButton.setBackgroundResource(R.drawable.play_button)
         }
     }
-
 
     override fun onSongListChange(songList: List<SongFinder.Song>) {
         songsArray = songList
