@@ -27,7 +27,7 @@
         android:id="@+id/little_song_layout"
         android:layout_width="0dp"
         android:layout_height="183dp"
-        android:background="@color/grey"
+        android:background="@color/darkGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.25"
@@ -43,7 +43,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp" />
+                android:layout_marginRight="15dp"
+                android:textColor="@android:color/background_light" />
 
             <TextView
                 android:id="@+id/artistName"
@@ -51,7 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/song_info_text"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp" />
+                android:layout_marginRight="15dp"
+                android:textColor="@android:color/background_light" />
 
             <TextView
                 android:id="@+id/album_Name"
@@ -59,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/artistName"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp" />
+                android:layout_marginRight="15dp"
+                android:textColor="@android:color/background_light" />
 
             <ProgressBar
                 android:id="@+id/progressBar"

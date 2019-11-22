@@ -198,6 +198,12 @@ class MainActivity : AppCompatActivity(), SongClickListener, SongsListChangeList
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         val fragment = SongPlayerFragment()
         fragment.getPlayer(audioPlayer)
+        transaction.setCustomAnimations(
+            R.animator.slide_in_bottom,
+            R.animator.fade_out,
+            R.animator.fade_in,
+            R.animator.slide_out_bottom
+        )
         transaction.add(R.id.container, fragment)
         transaction.addToBackStack(null).commit()
 
