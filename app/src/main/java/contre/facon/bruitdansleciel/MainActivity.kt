@@ -110,6 +110,7 @@ class MainActivity : AppCompatActivity(), SongClickListener, SongsListChangeList
     }
 
     private fun initialise() {
+        setTheme(R.style.AppTheme)
         initViewLinks()
 
         songHelper = SongHelper(applicationContext, this)

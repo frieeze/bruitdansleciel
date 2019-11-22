@@ -33,8 +33,8 @@ class Player(
     private var random: Boolean = false
 
 
-    fun playSong(song: SongFinder.Song) {
-        if (song == null) return
+    fun playSong(song: SongFinder.Song?) {
+        if (song == null || song?.uri == null) return
         currentSong = song
         mediaPlayer.reset()
         mediaPlayer.setDataSource(context, song.uri)
