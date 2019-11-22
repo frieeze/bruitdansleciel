@@ -10,25 +10,23 @@
     <RelativeLayout
         android:id="@+id/lecture_layout_inBounds"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_height="match_parent"
         android:background="@color/grey">
 
         <RelativeLayout
             android:id="@+id/picture_layout"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="25dp">
 
             <ImageView
                 android:id="@+id/song_picture"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="375dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="false"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginBottom="25dp"
                 android:src="@drawable/the_evol" />
 
@@ -37,35 +35,38 @@
         <RelativeLayout
             android:id="@+id/player_layout"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_below="@id/picture_layout"
-            android:layout_marginLeft="10dp"
+            android:layout_height="183dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/dark_grey_round_corners">
+            android:background="@color/grey">
 
             <RelativeLayout
                 android:id="@+id/song_name_layout"
                 android:layout_width="match_parent"
-                android:layout_height="75dp">
+                android:layout_height="100dp">
 
                 <TextView
                     android:id="@+id/lecture_layout_songName"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp" />
 
                 <TextView
                     android:id="@+id/lecture_layout_artisteName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/lecture_layout_songName" />
+                    android:layout_below="@id/lecture_layout_songName"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp" />
 
                 <TextView
                     android:id="@+id/lecture_layout_albumName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/lecture_layout_artisteName" />
+                    android:layout_below="@id/lecture_layout_artisteName"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp" />
 
                 <ProgressBar
                     android:id="@+id/lecture_layout_progresBar"
@@ -73,16 +74,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp" />
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp" />
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/lecture_buttons_layout"
                 android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:layout_below="@id/song_name_layout">
+                android:layout_height="100dp"
+                android:layout_alignParentBottom="true">
 
                 <ImageButton
                     android:id="@+id/lecture_layout_playpause_button"
@@ -97,7 +98,7 @@
                     android:layout_height="50dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="100dp"
+                    android:layout_marginRight="95dp"
                     android:background="@drawable/next_button" />
 
                 <ImageButton
@@ -115,7 +116,7 @@
                     android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="100dp"
+                    android:layout_marginLeft="95dp"
                     android:background="@drawable/previous_button" />
 
                 <ImageButton
