@@ -106,7 +106,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="95dp"
-                    android:background="@drawable/next_button" />
+                    android:background="?android:selectableItemBackground"
+                    android:src="@drawable/next_button" />
 
                 <ImageButton
                     android:id="@+id/lecture_layout_random_button"
@@ -115,7 +116,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="25dp"
-                    android:background="@drawable/random_button" />
+                    android:background="?android:selectableItemBackground"
+                    android:src="@drawable/random_button" />
 
                 <ImageButton
                     android:id="@+id/lecture_layout_previous_button"
